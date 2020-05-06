@@ -3,8 +3,7 @@
 package lesson2.task1
 
 import lesson1.task1.discriminant
-import kotlin.math.max
-import kotlin.math.sqrt
+import kotlin.math.*
 
 /**
  * Пример
@@ -117,7 +116,34 @@ fun rookOrBishopThreatens(
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
+fun triangleKind(a: Double, b: Double, c: Double): Int {
+    if (a + b < c || a + c < b || b + c < a)
+        return -1
+    val hypoten: Double
+    val side1: Double
+    val side2: Double
+    if (a >= b && a >= c) {
+        hypoten = a
+        side1 = b
+        side2 = c
+    }
+    else if (b >= a && b >= c) {
+        hypoten = b
+        side1 = a
+        side2 = c
+    }
+    else {
+        hypoten = c
+        side1 = a
+        side2 = b
+    }
+    if (hypoten.pow(2) == side1.pow(2) + side2.pow(2))
+        return 1
+    else if (hypoten.pow(2) < side1.pow(2) + side2.pow(2))
+        return 0
+    else
+        return 2
+}
 
 /**
  * Средняя
@@ -127,4 +153,18 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = TODO()
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+    if (b < c || d < a)
+        return -1
+    var x1 = 0
+    var x2 = 0
+    if (c in a..b)
+        x1 = c
+    else
+        x1 = a
+    if (b in c..d)
+        x2 = b
+    else
+        x2 = d
+    return x2 - x1
+}
