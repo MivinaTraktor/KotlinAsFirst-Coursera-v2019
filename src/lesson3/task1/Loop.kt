@@ -2,7 +2,7 @@
 
 package lesson3.task1
 
-import kotlin.math.sqrt
+import kotlin.math.*
 
 /**
  * Пример
@@ -75,7 +75,19 @@ fun digitNumber(n: Int): Int = TODO()
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = TODO()
+fun fib(n: Int): Int {
+    if (n == 1)
+        return 1
+    var a = 0
+    var b = 1
+    var res = 0
+    for (i in 2..n) {
+        res = a + b
+        a = b
+        b = res
+    }
+    return res
+}
 
 /**
  * Простая
@@ -196,7 +208,22 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var num: Int
+    var i = 1
+    var base = 1.0
+    var digits = 1
+    while (i <= n - digits) {
+        num = base.pow(2).toInt()
+        if (num / 10.0.pow(digits).toInt() != 0)
+            digits++
+        i += digits
+        base++
+    }
+    if (base.pow(2).toInt() / 10.0.pow(digits).toInt() != 0)
+        digits++
+    return (base.pow(2) / 10.0.pow(i + digits - 1 - n) % 10.0).toInt()
+}
 
 /**
  * Сложная

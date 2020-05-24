@@ -156,8 +156,8 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
     if (b < c || d < a)
         return -1
-    var x1 = 0
-    var x2 = 0
+    val x1: Int
+    val x2: Int
     if (c in a..b)
         x1 = c
     else
