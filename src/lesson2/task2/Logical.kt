@@ -76,8 +76,8 @@ fun circleInside(
  * Вернуть true, если кирпич пройдёт
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
-    var x1: Int
-    var x2: Int
+    val x1: Int
+    val x2: Int
     if (a > b && a > c) {
         x1 = b
         x2 = c
@@ -90,7 +90,5 @@ fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
         x1 = a
         x2 = b
     }
-    if ((x1 <= r && x2 <= s) || (x1 <= s && x2 <= r))
-        return true
-    else return false
+    return (x1 <= r && x2 <= s) || (x1 <= s && x2 <= r)
 }
