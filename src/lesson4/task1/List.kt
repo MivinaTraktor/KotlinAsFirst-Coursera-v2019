@@ -245,4 +245,103 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    var number = n
+    val listOnes = arrayOfNulls<String>(3).toMutableList()
+    for (i in 0..2) {
+        val lastNumber = number % 10
+        listOnes[i] = lastNumber.toString()
+        number /= 10
+        if (number == 0)
+            return numberToWord(listOnes).joinToString(" ", "", "")
+    }
+    val ones = numberToWord(listOnes)
+    val listThousands = arrayOfNulls<String>(3).toMutableList()
+    for (i in 0..2) {
+        val lastNumber = number % 10
+        listThousands[i] = lastNumber.toString()
+        number /= 10
+        if (number == 0)
+            break
+    }
+    return thousand(ones, numberToWord(listThousands))
+}
+
+fun numberToWord(list: MutableList<String?>): MutableList<String> {
+    val newList: MutableList<String> = MutableList(3) { "null" }
+    var i = 0
+    if (list[i + 1] == "1") {
+        newList[i] = when (list[i]) {
+            "1" -> "одиннадцать"
+            "2" -> "двенадцать"
+            "3" -> "тринадцать"
+            "4" -> "четырнадцать"
+            "5" -> "пятнадцать"
+            "6" -> "шестнадцать"
+            "7" -> "семнадцать"
+            "8" -> "восемнадцать"
+            "9" -> "девятнадцать"
+            "0" -> "десять"
+            else -> return mutableListOf("один")
+        }
+        i++
+    } else {
+        newList[i] = when (list[i]) {
+            "1" -> "один"
+            "2" -> "два"
+            "3" -> "три"
+            "4" -> "четыре"
+            "5" -> "пять"
+            "6" -> "шесть"
+            "7" -> "семь"
+            "8" -> "восемь"
+            "9" -> "девять"
+            else -> "null"
+        }
+        i++
+        newList[i] = when (list[i]) {
+            "2" -> "двадцать"
+            "3" -> "тридцать"
+            "4" -> "сорок"
+            "5" -> "пятьдесят"
+            "6" -> "шестьдесят"
+            "7" -> "семьдесят"
+            "8" -> "восемьдесят"
+            "9" -> "девяносто"
+            else -> "null"
+        }
+        i++
+    }
+    newList[i] = when (list[i]) {
+        "1" -> "сто"
+        "2" -> "двести"
+        "3" -> "триста"
+        "4" -> "четыреста"
+        "5" -> "пятьсот"
+        "6" -> "шестьсот"
+        "7" -> "семьсот"
+        "8" -> "восемьсот"
+        "9" -> "девятьсот"
+        else -> "null"
+    }
+    newList.reverse()
+    return newList.filterNot { it == "null" }.toMutableList()
+}
+
+fun thousand(ones: MutableList<String>, thousands: MutableList<String>): String {
+    when (thousands[thousands.size - 1]) {
+        "один" -> {
+            thousands[thousands.size - 1] = "одна"
+            thousands.add("тысяча")
+        }
+        "два" -> {
+            thousands[thousands.size - 1] = "две"
+            thousands.add("тысячи")
+        }
+        "три", "четыре" -> {
+            thousands.add("тысячи")
+        }
+        else -> thousands.add("тысяч")
+    }
+    return (thousands + ones).joinToString(" ", "", "")
+}
