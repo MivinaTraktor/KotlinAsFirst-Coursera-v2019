@@ -284,7 +284,7 @@ fun numberToWord(list: MutableList<String?>): MutableList<String> {
             "0" -> "десять"
             else -> return mutableListOf("один")
         }
-        i++
+        i += 2
     } else {
         newList[i] = when (list[i]) {
             "1" -> "один"
