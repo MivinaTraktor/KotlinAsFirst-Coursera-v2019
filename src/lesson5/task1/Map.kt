@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import kotlin.math.*
+
 /**
  * Пример
  *
@@ -280,4 +282,66 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val treasuresFiltered: MutableMap<String, Pair<Int, Int>> = mutableMapOf()
+    for ((name, pair) in treasures) {
+        if (pair.second > 0 && pair.first in 0..capacity)
+            treasuresFiltered[name] = pair
+    }
+    if (treasuresFiltered.isEmpty())
+        return emptySet()
+    val weightCost: MutableList<Pair<Int, Int>> = mutableListOf()
+    treasuresFiltered.forEach { (_, pair) ->
+        weightCost.add(pair)
+    }
+    return returnSet(treasuresFiltered, weightCost, capacity)
+}
+
+fun maxPrice(weightCost: MutableList<Pair<Int, Int>>, capacity: Int): Array<IntArray> {
+    val n = weightCost.size
+    val table: Array<IntArray> = Array(n + 1) { IntArray(capacity + 1) { 0 } }
+    for (i in 0..n) {
+        for (a in 0..capacity) {
+            if (i == 0 || a == 0)
+                continue
+            if (weightCost[i - 1].first <= a)
+                table[i][a] = max(
+                    weightCost[i - 1].second + table[i - 1][a - weightCost[i - 1].first],
+                    table[i - 1][a]
+                )
+            else
+                table[i][a] = table[i - 1][a]
+        }
+    }
+    return table
+}
+
+fun returnSet(
+    treasuresFiltered: MutableMap<String, Pair<Int, Int>>,
+    weightCost: MutableList<Pair<Int, Int>>,
+    capacity: Int
+): Set<String> {
+    val table = maxPrice(weightCost, capacity)
+    val n = weightCost.size
+    var res = table[n][capacity]
+    var a = capacity
+    val itemsList: MutableList<Pair<Int, Int>> = mutableListOf()
+    for (i in n downTo 0) {
+        if (res <= 0)
+            break
+        if (res == table[i - 1][a])
+            continue
+        else {
+            itemsList.add(element = weightCost[i - 1])
+            a -= weightCost[i - 1].first
+            res -= weightCost[i - 1].second
+        }
+    }
+    val selectedItems: MutableSet<String> = mutableSetOf()
+    for ((sWeight, sValue) in itemsList) {
+        for ((key, value) in treasuresFiltered)
+            if (value.first == sWeight && value.second == sValue)
+                selectedItems.add(key)
+    }
+    return selectedItems.toSet()
+}
