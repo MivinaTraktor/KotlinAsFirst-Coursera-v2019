@@ -2,6 +2,9 @@
 
 package lesson6.task1
 
+import java.lang.IllegalArgumentException
+import java.util.*
+
 /**
  * Пример
  *
@@ -133,7 +136,45 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val matchResult = Regex("""^\d+(\s[+-]\s\d+)*$""").find(expression)
+    if (matchResult == null)
+        throw IllegalArgumentException("Wrong string")
+    val expr = expression.split(" ").toTypedArray()
+    if (expr.size == 1)
+        return expr[0].toInt()
+    return fillLists(expr)
+}
+
+fun fillLists(expression: Array<String>): Int {
+    val numbers: MutableList<Int> = mutableListOf()
+    val plusMinus: MutableList<Boolean> = mutableListOf()
+    for (i in expression.indices) {
+        when (i % 2) {
+            0 -> numbers.add(expression[i].toInt())
+            else -> {
+                plusMinus.add(
+                    when (expression[i]) {
+                        "+" -> true
+                        else -> false
+                    }
+                )
+            }
+        }
+    }
+    return countAnswer(numbers, plusMinus)
+}
+
+fun countAnswer(numbers: List<Int>, operators: List<Boolean>): Int {
+    var res = numbers[0]
+    for (i in operators.indices) {
+        when (operators[i]) {
+            true -> res += numbers[i + 1]
+            else -> res -= numbers[i + 1]
+        }
+    }
+    return res
+}
 
 /**
  * Сложная
@@ -144,7 +185,20 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val words = str.split(" ").toTypedArray()
+    var tempIndex = -1
+    var tempString = ""
+    words.forEach { it ->
+        tempIndex++
+        val string = it.toLowerCase(locale = Locale.forLanguageTag("ru-RU"))
+        if (string == tempString)
+            return tempIndex - 1 - string.length
+        tempIndex += string.length
+        tempString = string
+    }
+    return -1
+}
 
 /**
  * Сложная
